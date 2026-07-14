@@ -59,6 +59,12 @@ python -m pip install -e '.[ocr]'
 
 PaddleOCR 3.x 使用本地推理，首次识别可能下载模型文件。不同操作系统、CPU/GPU 对 PaddlePaddle 的安装方式可能不同；如果上述命令失败，请按照 PaddlePaddle 对应平台的安装说明先安装推理引擎。
 
+## 演示文件
+
+仓库提供可直接运行的 PDF 简历 `examples/resume.pdf` 和岗位描述
+`examples/jd.txt`。演示简历中的姓名、电话和邮箱已替换为演示值；请勿将这些
+字段视为真实候选人信息。
+
 ## 环境变量
 
 复制示例文件：
@@ -99,7 +105,7 @@ resume-cli score --help
 ### 解析 PDF
 
 ```bash
-resume-cli parse ./resume.pdf
+resume-cli parse ./examples/resume.pdf
 ```
 
 程序先读取每页文本层。文本不足且页面包含图像时，只对该页自动执行 OCR，然后按照原页序合并结果。代码中的 `OCR_MIN_PAGE_CHARS` 是有名称、可测试的检测阈值。
@@ -109,13 +115,13 @@ resume-cli parse ./resume.pdf
 真实模型：
 
 ```bash
-resume-cli extract ./resume.pdf
+resume-cli extract ./examples/resume.pdf
 ```
 
 离线演示：
 
 ```bash
-resume-cli extract ./resume.pdf --mock
+resume-cli extract ./examples/resume.pdf --mock
 ```
 
 示例输出：
@@ -141,8 +147,8 @@ resume-cli extract ./resume.pdf --mock
 ### JD 匹配评分
 
 ```bash
-resume-cli score ./resume.pdf --jd ./examples/jd.txt
-resume-cli score ./resume.pdf --jd ./examples/jd.txt --mock
+resume-cli score ./examples/resume.pdf --jd ./examples/jd.txt
+resume-cli score ./examples/resume.pdf --jd ./examples/jd.txt --mock
 ```
 
 固定权重为技能 40%、经历 40%、教育 20%。AI 只返回三个维度的分数；`overall_score` 由程序按权重计算并使用整数四舍五入。如果 JD 没有明确教育要求，`education_score` 按 100 处理，使其不产生惩罚。
@@ -164,8 +170,8 @@ resume-cli score ./resume.pdf --jd ./examples/jd.txt --mock
 ### 保存 JSON
 
 ```bash
-resume-cli extract ./resume.pdf --mock --output result.json
-resume-cli score ./resume.pdf --jd ./examples/jd.txt --mock --output score.json
+resume-cli extract ./examples/resume.pdf --mock --output result.json
+resume-cli score ./examples/resume.pdf --jd ./examples/jd.txt --mock --output score.json
 ```
 
 默认不覆盖已有文件；需要明确传入 `--force`。JSON 始终输出到 stdout，保存提示输出到 stderr，便于管道处理。
