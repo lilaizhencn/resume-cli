@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "resume-cli"
+version = "0.1.0"
+description = "Parse PDF resumes, extract structured data, and score job fit with AI."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "lilaizhencn" }]
+dependencies = [
+  "openai>=1.54,<3",
+  "pydantic>=2.8,<3",
+  "pypdf>=5,<7",
+  "python-dotenv>=1.0,<2",
+  "typer>=0.16,<1",
+]
+
+[project.optional-dependencies]
+ocr = [
+  "numpy>=1.26",
+  "paddleocr>=3.0,<4",
+  "paddlepaddle>=3.0,<4",
+  "pymupdf>=1.25,<2",
+]
+dev = [
+  "pytest>=8,<10",
+  "pytest-cov>=5,<8",
+  "reportlab>=4,<5",
+  "ruff>=0.12",
+]
+
+[project.scripts]
+resume-cli = "resume_cli.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/resume_cli"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
